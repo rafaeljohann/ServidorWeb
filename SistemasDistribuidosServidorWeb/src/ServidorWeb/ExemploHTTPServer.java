@@ -3,6 +3,7 @@ package ServidorWeb;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,7 +43,6 @@ public class ExemploHTTPServer {
             s = ss.accept();
             in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             out = new PrintWriter(s.getOutputStream());
-            outDataStream = new DataOutputStream(s.getOutputStream());
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +53,6 @@ public class ExemploHTTPServer {
         String line = "";
         try {
             while((line = in.readLine()).length() > 0){
-                System.out.println(line);
                 if (line.contains("GET")) {
                     return line;
                 }
@@ -64,19 +63,21 @@ public class ExemploHTTPServer {
 	return line;
     }
     
-    public void sendReply(String page, String fileName) throws IOException{
-    	StringBuilder bldr = new StringBuilder();
-    	String str;
-    	BufferedReader in = null;
+    private String findHtmlPageOrStyle(String page, String typeFile) throws FileNotFoundException, IOException{
+        File file = null;
+        String str;
+        StringBuilder bldr = new StringBuilder();
+        BufferedReader in = null;
         
-    	if (validPages.contains(page)) {
-    		in = new BufferedReader(
-                    new FileReader(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\" + (page.isEmpty() ? "index.html" : page)));
-    	}else {
-    		in = new BufferedReader(
-                    new FileReader(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\erro.html"));
+        if (validPages.contains(page)) {
+            file = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\" + (page.isEmpty() ? "index" + typeFile : page));
+            in = new BufferedReader(new FileReader(file));
+        }else {
+            file = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\erro" + typeFile);
+            in = new BufferedReader(
+                new FileReader(file));
     	}
-    	
+        
     	if (in != null) {
             while((str = in.readLine())!= null)
       	      bldr.append(str);
@@ -84,34 +85,85 @@ public class ExemploHTTPServer {
     	}
     	
     	String content = bldr.toString();
-    	
-    	System.out.println(page);
-        System.out.println("enviar resposta");
-        
-        String data = "";
-        
-        if (page.contains("imgs")) {
-            File fi = new File("D:\\" + fileName);
-            byte[] fileContent = Files.readAllBytes(fi.toPath());
+        return content;
+    }
+    
+    private byte[] findFileServer(String page, String fileName) throws IOException{
+        File fi;
+        if (page.endsWith(".ico") || page.endsWith(".css")) {
+            fi = new File("D:\\ImagensServidor\\" + page); //todo
+        }else {
+            fi = new File("D:\\ImagensServidor\\" + fileName); // todo
+        }
 
-            outDataStream.writeBytes("HTTP/1.0 200 OK\n" +
-                    "Content-Type: image/jpeg\n" +
-                    "Content-Length: " + fileContent.length + "\n" +
-                    "\n");
+        byte[] fileContent = Files.readAllBytes(fi.toPath());
+        return fileContent;
+    }
+    
+    private String findContentTypeRequest(String page, String fileName){
+        String contentType = "";
+        
+        if (fileName.endsWith(".jpg")) {
+            contentType = "image/jpeg";
+        }else if (fileName.endsWith(".png")) {
+            contentType = "image/png";
+        }else if (fileName.endsWith(".ico")) {
+            contentType = "image/x-icon";
+        } else if(page.endsWith(".css")) {            
+            contentType = "text/css";
+        }else{
+            contentType = "text/html";
+        }
+        
+        return contentType;
+    }
+    
+    private void sendResponseInBytesToClient(String contentType, int length, byte[] content) throws IOException {
+        outDataStream = new DataOutputStream(s.getOutputStream());
+        outDataStream.writeBytes("HTTP/1.0 200 OK\n" +
+                "Content-Type: " + contentType + "\n" +
+                "Content-Length: " + length + "\n" +
+                "\n");
 
-            outDataStream.write(fileContent);
-            outDataStream.flush();
-               
-       }else {
-            data = "HTTP/1.1 200 OK\n" +
-                            "Content-Type: text/html;\n" +
-                            "Server: Sist.Dist. Server 1.0\n" +
-                            "Connection: close\n" +
-                            "\n" +
-                            content;
-            
-            out.println(data);
-            out.flush();
+        outDataStream.write(content);
+        outDataStream.flush();
+        outDataStream.close();
+    }
+    
+    private void sendResponseInStringToClient(String contentType, int length, String content){
+        String data = "HTTP/1.1 200 OK\n" +
+            "Content-Type: " + contentType + "\n" +
+            "Content-Length: " + length + "\n" +
+            "Server: Sist.Dist. Server 1.0\n" +
+            "Connection: close\n" +
+            "\n";
+
+        out.println(data);
+        out.println(content);
+        out.println(data);
+        out.flush();
+    }
+    
+    public void sendReply(String page, String fileName) throws IOException{
+        String content = "";
+        byte[] contentBytes = null;
+        
+        if (page.contains("imgs") || page.endsWith(".ico")) {
+            contentBytes = findFileServer(page, fileName);
+        }else if (page.endsWith(".css")) {
+            contentBytes = findFileServer(page, ".css");
+        }else {
+            content = findHtmlPageOrStyle(page, ".html");
+        }
+        
+        String contentType = findContentTypeRequest(page, fileName);
+        
+        if (contentBytes != null) {
+            sendResponseInBytesToClient(contentType, contentBytes.length, contentBytes);
+        }
+        
+        if (content != "") {
+            sendResponseInStringToClient(contentType, content.length(), content);
         }
     }
     

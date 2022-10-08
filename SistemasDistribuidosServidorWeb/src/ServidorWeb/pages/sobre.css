@@ -1,0 +1,30 @@
+body {
+    background-color: #000;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+    color: #fff;
+}
+
+#menu-horizontal ul {
+    list-style: none;
+    padding: 0;
+    background-color: rgb(37, 37, 39);
+}
+
+#menu-horizontal ul li {
+    display: inline;
+}
+
+#menu-horizontal ul li a {
+    color: #fff;
+    padding: 20px;
+    display: inline-block;
+    text-decoration: none;
+    transition: background .4s;
+}
+
+#menu-horizontal ul li a:hover {
+    background-color: blueviolet;
+}

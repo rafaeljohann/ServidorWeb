@@ -1,13 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Página Inicial</title>
+        <link rel="stylesheet" href="index.css">
+        <title>Home</title>
     </head>
     <body>
-        Meu index
-        <img src="../ServidorWeb.pages.imgs/banner.jpg" height="300" width="500" />
+        <nav id="menu-horizontal">
+            <ul>
+                <li>
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a href="./contato.html">Contato</a>
+                </li>
+                <li>
+                    <a href="./sobre.html">Sobre</a>
+                </li>
+            </ul>
+        </nav>
+        <div id="infos-dev">
+            <div id="cargo-dev">
+                <div id="cargo-dev__funcao">.NET</div>
+                <div id="cargo-dev__description">Developer</div>
+                <div>
+                    <p>Olá! Seja bem-vindo ao meu portifólio. Atuo há 4 anos como desenvolvedor.
+                        Atualmente trabalho na CWI Software. Confira meus projetos!
+                    </p>
+                </div>
+                <div id="ferramentas">
+                    <img src="../ServidorWeb.pages.imgs/NET_Core_Logo.png" height="150px" />
+                    <img src="../ServidorWeb.pages.imgs/react.png" height="150px" />
+                    <img src="../ServidorWeb.pages.imgs/ef-core.png" height="100px" style="padding-top: 20px;" /> 
+                </div>
+            </div>
+            <div id="avatar">
+                <img src="../ServidorWeb.pages.imgs/Avatar-Maker.png" height="600px" />
+                <h1>Rafael Johann</h1>
+            </div>
+        </div>
+        <div id="projetos">
+            <h1>Alguns projetos de destaque realizados:</h1>
+            <div id="projetos__description">
+                <ul>
+                    <li>
+                        <span style="font-weight: bold;">Customização de documentos:</span> Criação de documentos que podem ser customizados dinamicamente pelo usuário.<br/>
+                        <span style="font-weight: bold;">Tecnologias Utilizadas:</span> React JS, Typescript, .NET e banco de dados MongoDB.
+                    </li>
+                </ul>
+            </div>
+            <div id="projetos__description">
+                <ul>
+                    <li>
+                        <span style="font-weight: bold;">Cadastro de CNPJ:</span> Adequação de cadastro de financeira para receber CNPJs.<br/>
+                        <span style="font-weight: bold;">Tecnologias Utilizadas:</span> .NET, Razor e banco de dados Oracle.
+                    </li>
+                </ul>
+            </div>
+            <div id="projetos__description">
+                <ul>
+                    <li>
+                        <span style="font-weight: bold;">Solicitação de empréstimo via Saque-Aniversário:</span> Adequação de cadastro de financeira para receber empréstimos utilizando o saque-aniversário.<br/>
+                        <span style="font-weight: bold;">Tecnologias Utilizadas:</span> .NET, ASP.NET WebForms, Visual Basic e banco de dados SQL Server.
+                    </li>
+                </ul>
+            </div>
+            <div id="projetos__description">
+                <ul>
+                    <li>
+                        <span style="font-weight: bold;">Prevenção de Lavagem de Dinheiro:</span> Manipulação e monitoramento de registros para identificação de possíveis fraudes bancárias.<br/>
+                        <span style="font-weight: bold;">Tecnologias Utilizadas:</span> .NET e banco de dados Oracle.
+                    </li>
+                </ul>
+            </div>
+            <div id="projetos__description">
+                <ul>
+                    <li>
+                        <span style="font-weight: bold;">Pleitos Fiscais:</span> Apropriação de crédito presumido em empresa atacadista/varejista de porte nacional.<br/>
+                        <span style="font-weight: bold;">Tecnologias Utilizadas:</span> PL/SQL e Oracle Forms.
+                    </li>
+                </ul>
+            </div>
+        </div>
     </body>
 </html>
