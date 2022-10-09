@@ -125,6 +125,7 @@ public class ExemploHTTPServer {
         outDataStream.writeBytes("HTTP/1.0 200 OK\n" +
                 "Content-Type: " + contentType + "\n" +
                 "Content-Length: " + length + "\n" +
+                "Connection: close\n" +
                 "\n");
 
         outDataStream.write(content);
