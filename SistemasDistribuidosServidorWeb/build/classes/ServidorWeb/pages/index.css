@@ -79,7 +79,7 @@ body {
     padding-left: 20px;
 }
 
-#projetos__description {
+.projetos__description {
     background-color: blueviolet;
     display: flex;
     margin: 5px;

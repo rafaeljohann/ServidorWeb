@@ -29,17 +29,17 @@ body {
     background-color: blueviolet;
 }
 
-#redes-sociais {
+.redes-sociais {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
     font-size: 12px;
 }
 
-#redes-sociais h1 {
+.redes-sociais h1 {
     padding-left: 10px;
 }
 
-#redes-sociais__description {
+.redes-sociais__description {
     display: flex;
     padding: 10px;
 }

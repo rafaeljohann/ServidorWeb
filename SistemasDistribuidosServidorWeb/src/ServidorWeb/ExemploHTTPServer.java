@@ -63,7 +63,7 @@ public class ExemploHTTPServer {
 	return line;
     }
     
-    private String findHtmlPageOrStyle(String page, String typeFile) throws FileNotFoundException, IOException{
+    private String findHtmlPage(String page, String typeFile) throws FileNotFoundException, IOException{
         File file = null;
         String str;
         StringBuilder bldr = new StringBuilder();
@@ -91,9 +91,9 @@ public class ExemploHTTPServer {
     private byte[] findFileServer(String page, String fileName) throws IOException{
         File fi;
         if (page.endsWith(".ico") || page.endsWith(".css")) {
-            fi = new File("D:\\ImagensServidor\\" + page); //todo
+            fi = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\" + page);
         }else {
-            fi = new File("D:\\ImagensServidor\\" + fileName); // todo
+            fi = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\imgs\\" + fileName);
         }
 
         byte[] fileContent = Files.readAllBytes(fi.toPath());
@@ -109,7 +109,9 @@ public class ExemploHTTPServer {
             contentType = "image/png";
         }else if (fileName.endsWith(".ico")) {
             contentType = "image/x-icon";
-        } else if(page.endsWith(".css")) {            
+        }else if(page.endsWith(".gif")) {
+            contentType = "image/gif";
+        }else if(page.endsWith(".css")) {            
             contentType = "text/css";
         }else{
             contentType = "text/html";
@@ -153,7 +155,7 @@ public class ExemploHTTPServer {
         }else if (page.endsWith(".css")) {
             contentBytes = findFileServer(page, ".css");
         }else {
-            content = findHtmlPageOrStyle(page, ".html");
+            content = findHtmlPage(page, ".html");
         }
         
         String contentType = findContentTypeRequest(page, fileName);
