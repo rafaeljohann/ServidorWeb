@@ -50,30 +50,24 @@ public class ExemploHTTPServer {
     }
     
     public String receiveRequest(){
-        String line = "";
         try {
-            while((line = in.readLine()).length() > 0){
-                if (line.contains("GET")) {
-                    return line;
-                }
-            }
+          return in.readLine();
         } catch (Exception e) {
             e.printStackTrace();
         }
-	return line;
+        return "";
     }
     
-    private String findHtmlPage(String page, String typeFile) throws FileNotFoundException, IOException{
+    private String findHtmlPage(String page) throws FileNotFoundException, IOException{
         File file = null;
         String str;
         StringBuilder bldr = new StringBuilder();
-        BufferedReader in = null;
         
         if (validPages.contains(page)) {
-            file = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\" + (page.isEmpty() ? "index" + typeFile : page));
+            file = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\" + (page.isEmpty() ? "index.html" : page));
             in = new BufferedReader(new FileReader(file));
         }else {
-            file = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\erro" + typeFile);
+            file = new File(System.getProperty("user.dir") + "\\src\\ServidorWeb\\pages\\erro.html");
             in = new BufferedReader(
                 new FileReader(file));
     	}
@@ -84,8 +78,7 @@ public class ExemploHTTPServer {
             in.close();
     	}
     	
-    	String content = bldr.toString();
-        return content;
+    	return bldr.toString();
     }
     
     private byte[] findFileServer(String page, String fileName) throws IOException{
@@ -122,7 +115,7 @@ public class ExemploHTTPServer {
     
     private void sendResponseInBytesToClient(String contentType, int length, byte[] content) throws IOException {
         outDataStream = new DataOutputStream(s.getOutputStream());
-        outDataStream.writeBytes("HTTP/1.0 200 OK\n" +
+        outDataStream.writeBytes("HTTP/1.1 200 OK\n" +
                 "Content-Type: " + contentType + "\n" +
                 "Content-Length: " + length + "\n" +
                 "Connection: close\n" +
@@ -143,20 +136,18 @@ public class ExemploHTTPServer {
 
         out.println(data);
         out.println(content);
-        out.println(data);
         out.flush();
+        out.close();
     }
     
     public void sendReply(String page, String fileName) throws IOException{
         String content = "";
         byte[] contentBytes = null;
         
-        if (page.contains("imgs") || page.endsWith(".ico")) {
+        if (page.contains("imgs") || page.endsWith(".ico") || page.endsWith(".css")) {
             contentBytes = findFileServer(page, fileName);
-        }else if (page.endsWith(".css")) {
-            contentBytes = findFileServer(page, ".css");
         }else {
-            content = findHtmlPage(page, ".html");
+            content = findHtmlPage(page);
         }
         
         String contentType = findContentTypeRequest(page, fileName);
@@ -194,10 +185,13 @@ public class ExemploHTTPServer {
         while(true) {
             server.waitClient();
             String request = server.receiveRequest();
-            String page = server.findDataPage(request, false);
-            String fileName = server.findDataPage(request, true);
             
-            server.sendReply(page, fileName);
+            if (request != null && !request.equals("")) {
+                String page = server.findDataPage(request, false);
+                String fileName = server.findDataPage(request, true);
+
+                server.sendReply(page, fileName);  
+            }
         }
     }
 }
